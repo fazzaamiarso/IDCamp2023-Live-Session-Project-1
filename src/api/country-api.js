@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const COUNTRY_API_BASE = "https://restcountries.com/v3.1/";
 
-const countryClient = axios.create({ baseURL: COUNTRY_API_BASE });
+const NETLIFY_FUNCTIONS_DIR = "/.netlify/functions/"
+const client = axios.create({ baseURL: NETLIFY_FUNCTIONS_DIR })
 
 export const getAllCountries = async () => {
   try {
-    const res = await countryClient.get("all");
+    const res = await client.get("getAllCountries");
     return res.data;
   } catch (e) {
     throw new Error("Something went wrong!");
@@ -15,8 +15,8 @@ export const getAllCountries = async () => {
 
 export const getCountryByCode = async (countryCode) => {
   try {
-    const res = await countryClient.get(`alpha/${countryCode}`);
-    return res.data[0];
+    const res = await client.get("getByCountryCode", { params: { countryCode } });
+    return res.data;
   } catch (e) {
     throw new Error("Something went wrong!");
   }
@@ -24,7 +24,8 @@ export const getCountryByCode = async (countryCode) => {
 
 export const getCountryByName = async (searchQuery) => {
   try {
-    const res = await countryClient.get(`name/${searchQuery}`);
+    const res = await client.get("searchCountries", { params: { q: searchQuery } });
+
     return res.data;
   } catch (e) {
     throw new Error("Something went wrong!");
@@ -33,22 +34,11 @@ export const getCountryByName = async (searchQuery) => {
 
 export const getBorderingCountries = async (countryCodes) => {
   try {
-    const promises = await Promise.all(
-      countryCodes.map(async (code) => {
-        return countryClient.get(`alpha/${code.toLowerCase()}`, {
-          params: {
-            fields: ["name", "cca3"],
-          },
-          paramsSerializer: { indexes: null },
-        });
-      })
-    );
+    const res = await client.get("getBorderingCountries", {
+      params: { countryCodes }, paramsSerializer: { indexes: null },
+    });
 
-    const data = promises.map((country) => ({
-      name: country.data.name.common,
-      code: country.data.cca3.toLowerCase(),
-    }));
-    return data;
+    return res.data;
   } catch (e) {
     throw new Error("Something went wrong!");
   }

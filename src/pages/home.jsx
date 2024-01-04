@@ -20,8 +20,8 @@ function Home() {
 
   const filteredCountries = selectedRegion
     ? countriesBySearch?.filter(
-        (country) => country.region.toLowerCase() === selectedRegion?.toLowerCase()
-      )
+      (country) => country.region.toLowerCase() === selectedRegion?.toLowerCase()
+    )
     : countriesBySearch;
 
   useEffect(() => {
