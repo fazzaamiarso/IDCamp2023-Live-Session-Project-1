@@ -30,7 +30,13 @@ function Home() {
 
   useEffect(() => {
     if (!searchedCountry || isSearching <= 0) return;
-    getCountryByName(searchedCountry).then(setSearchedCountries).catch(console.log);
+
+    const abortController = new AbortController();
+    getCountryByName(searchedCountry, abortController.signal).then(setSearchedCountries).catch((error) => {
+      console.log(error.message)
+    });
+
+    return () => { abortController.abort() }
   }, [searchedCountry]);
 
   return (

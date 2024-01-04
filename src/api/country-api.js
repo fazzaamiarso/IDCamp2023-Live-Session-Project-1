@@ -22,13 +22,12 @@ export const getCountryByCode = async (countryCode) => {
   }
 };
 
-export const getCountryByName = async (searchQuery) => {
+export const getCountryByName = async (searchQuery, signal) => {
   try {
-    const res = await client.get("searchCountries", { params: { q: searchQuery } });
-
+    const res = await client.get("searchCountries", { params: { q: searchQuery }, signal });
     return res.data;
   } catch (e) {
-    throw new Error("Something went wrong!");
+    throw new Error(e.message);
   }
 };
 

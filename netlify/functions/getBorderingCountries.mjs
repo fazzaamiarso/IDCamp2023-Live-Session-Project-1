@@ -1,10 +1,8 @@
 import { countryClient } from "../client.mjs";
-import qs from "query-string";
 
 export default async (req) => {
-    // const { countryCodes } = qs.parseUrl(req.url, { arrayFormat: "bracket" }).query
-    const parsedQuery = qs.parseUrl(req.url, { arrayFormat: "none" }).query
-    const countryCodes = parsedQuery.countryCodes.split(",")
+    const params = (new URL(req.url).searchParams.get("countryCodes"))
+    const countryCodes = params.split(",")
 
     try {
         const promises = await Promise.all(
