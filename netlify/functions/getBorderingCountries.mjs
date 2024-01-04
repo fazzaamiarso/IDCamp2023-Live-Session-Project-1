@@ -1,8 +1,10 @@
 import { countryClient } from "../client.mjs";
 
 export default async (req) => {
-    const params = (new URL(req.url).searchParams.get("countryCodes"))
-    const countryCodes = params.split(",")
+    const params = (new URL(req.url).searchParams.getAll("countryCodes"))
+    console.log(params)
+    const countryCodes = params[0].split(",")
+
 
     try {
         const promises = await Promise.all(
