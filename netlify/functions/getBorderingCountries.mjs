@@ -9,7 +9,7 @@ export default async (req) => {
     try {
         const promises = await Promise.all(
             countryCodes.map(async (code) => {
-                return countryClient.get(`alpha/${code.toLowerCase()}`, {
+                return await countryClient.get(`alpha/${code.toLowerCase()}`, {
                     params: {
                         fields: ["name", "cca3"],
                     },
