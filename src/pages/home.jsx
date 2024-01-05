@@ -72,20 +72,20 @@ const Home = () => {
           filteredCountries?.map((country) => {
             return (
               <li
-                key={country.name.common}
+                key={country.name}
                 className="flex flex-col bg-white dark:bg-darkElement"
               >
                 <div className="h-1/2">
                   <img
-                    src={country.flags.png}
-                    alt={country.name.common}
+                    src={country.flagSrc}
+                    alt={country.name}
                     className="bg-cover h-full w-full"
                   />
                 </div>
                 <div className="p-4">
                   <h2 className="font-bold text-xl mb-2">
                     <Link to={`country/${country.cca3.toLowerCase()}`}>
-                      {country.name.common}
+                      {country.name}
                     </Link>
                   </h2>
                   <DataPoint

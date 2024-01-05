@@ -6,6 +6,7 @@ import Root from "./root.jsx";
 import CountryDetail from "./pages/country-detail.jsx";
 import Home from "./pages/home";
 import { DarkModeProvider } from "./context/darkmode-context";
+import NotFound from "./pages/404.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,8 +19,13 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "country/:code", element: <CountryDetail /> },
+      {
+        path: "*",
+        element: <NotFound />
+      }
     ],
   },
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

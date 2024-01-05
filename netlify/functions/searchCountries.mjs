@@ -6,7 +6,17 @@ export default async (req) => {
 
     try {
         const res = await countryClient.get(`name/${q}`);
-        return new Response(JSON.stringify(res.data));
+        const countries = res.data.map(country => {
+            return {
+                name: country.name.common,
+                flagSrc: country.flags.png,
+                cca3: country.cca3,
+                population: country.population,
+                region: country.region,
+                capital: country.capital
+            }
+        })
+        return Response.json(countries);
     } catch (e) {
         throw new Error("Something went wrong!");
     }

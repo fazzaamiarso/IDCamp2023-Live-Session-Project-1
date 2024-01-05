@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const NETLIFY_FUNCTIONS_DIR = "/.netlify/functions/"
 const client = axios.create({ baseURL: NETLIFY_FUNCTIONS_DIR })
 
