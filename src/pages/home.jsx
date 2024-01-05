@@ -6,12 +6,28 @@ import * as Select from "@radix-ui/react-select";
 import { MagnifyingGlassIcon, TriangleDownIcon } from "@radix-ui/react-icons";
 import qs from "query-string";
 
-function Home() {
+const useDebounce = (value, delay = 300) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay);
+
+    return () => { clearTimeout(timerId) }
+  }, [value, delay])
+
+  return debouncedValue;
+}
+
+const Home = () => {
   const [countries, setCountries] = useState(null);
   const [searchedCountries, setSearchedCountries] = useState(null);
   const [searchParams] = useSearchParams();
 
-  const { region: selectedRegion, q: searchedCountry } = qs.parse(searchParams.toString());
+  const { region: selectedRegion, q } = qs.parse(searchParams.toString());
+
+  const searchedCountry = useDebounce(q, 200)
 
   const isSearching = Boolean(searchedCountry?.length);
 
@@ -23,6 +39,7 @@ function Home() {
       (country) => country.region.toLowerCase() === selectedRegion?.toLowerCase()
     )
     : countriesBySearch;
+
 
   useEffect(() => {
     getAllCountries().then(setCountries).catch(console.log);
@@ -46,43 +63,39 @@ function Home() {
         <RegionSelect selectedRegion={selectedRegion} />
       </div>
       <ul className="grid sm:grid-cols-2 gap-4 lg:grid-cols-3">
-        {filteredCountries === undefined ? (
-          <>
-            <CountryCardSkeleton />
-            <CountryCardSkeleton />
-            <CountryCardSkeleton />
-            <CountryCardSkeleton />
-          </>
+        {!filteredCountries ? (
+          Array.from({ length: 10 }).map(_ => {
+            return <CountryCardSkeleton key={Math.random()} />
+
+          })
         ) : (
           filteredCountries?.map((country) => {
             return (
-              <>
-                <li
-                  key={country.name.common}
-                  className="flex flex-col bg-white dark:bg-darkElement"
-                >
-                  <div className="h-1/2">
-                    <img
-                      src={country.flags.png}
-                      alt={country.name.common}
-                      className="bg-cover h-full w-full"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h2 className="font-bold text-xl mb-2">
-                      <Link to={`country/${country.cca3.toLowerCase()}`}>
-                        {country.name.common}
-                      </Link>
-                    </h2>
-                    <DataPoint
-                      property="Population"
-                      value={Intl.NumberFormat("en-US").format(country.population)}
-                    />
-                    <DataPoint property="Region" value={country.region} />
-                    <DataPoint property="Capital" value={country.capital} />
-                  </div>
-                </li>
-              </>
+              <li
+                key={country.name.common}
+                className="flex flex-col bg-white dark:bg-darkElement"
+              >
+                <div className="h-1/2">
+                  <img
+                    src={country.flags.png}
+                    alt={country.name.common}
+                    className="bg-cover h-full w-full"
+                  />
+                </div>
+                <div className="p-4">
+                  <h2 className="font-bold text-xl mb-2">
+                    <Link to={`country/${country.cca3.toLowerCase()}`}>
+                      {country.name.common}
+                    </Link>
+                  </h2>
+                  <DataPoint
+                    property="Population"
+                    value={Intl.NumberFormat("en-US").format(country.population)}
+                  />
+                  <DataPoint property="Region" value={country.region} />
+                  <DataPoint property="Capital" value={country.capital} />
+                </div>
+              </li>
             );
           })
         )}

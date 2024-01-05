@@ -1,4 +1,4 @@
-[[redirects]]
-    from = "/*"
-    to = "./index.html"
-    status = 200
+[dev]
+    command = "vite"
+    targetPort = 5173
+    publish = "dist"
