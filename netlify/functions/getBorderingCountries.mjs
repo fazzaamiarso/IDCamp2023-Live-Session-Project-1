@@ -16,6 +16,9 @@ export default async (req) => {
             })
         );
 
+        console.log("PARAMS:", JSON.stringify(params))
+        console.log("PROMISES:", promises)
+
         const data = promises.map((country) => ({
             name: country.data.name.common,
             code: country.data.cca3.toLowerCase(),
