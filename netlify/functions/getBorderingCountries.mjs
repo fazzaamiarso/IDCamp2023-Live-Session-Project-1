@@ -16,7 +16,8 @@ export default async (req) => {
         const promises = await Promise.all(promiseArray);
 
         console.log("PARAMS:", JSON.stringify(params))
-        console.log("PROMISES:", promises)
+        console.log("PROMISES ARRAY:", JSON.stringify(promiseArray))
+        console.log("PROMISES:", JSON.stringify(promises))
 
         const data = promises.map((country) => ({
             name: country.data.name.common,

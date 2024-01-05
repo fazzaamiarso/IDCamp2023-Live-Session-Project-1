@@ -22,12 +22,9 @@ export const getCountryByCode = async (countryCode) => {
 };
 
 export const getCountryByName = async (searchQuery, signal) => {
-  try {
-    const res = await client.get("searchCountries", { params: { q: searchQuery }, signal });
-    return res.data;
-  } catch (e) {
-    throw new Error(e.message);
-  }
+  const res = await client.get("searchCountries", { params: { q: searchQuery }, signal });
+  if (res.data.status === 404) return []
+  return res.data;
 };
 
 export const getBorderingCountries = async (countryCodes) => {

@@ -18,6 +18,6 @@ export default async (req) => {
         })
         return Response.json(countries);
     } catch (e) {
-        throw new Error("Something went wrong!");
+        return Response.json(e.response.data);
     }
 }

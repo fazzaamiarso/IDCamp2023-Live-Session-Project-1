@@ -29,7 +29,7 @@ const Home = () => {
 
   const searchedCountry = useDebounce(q, 200)
 
-  const isSearching = Boolean(searchedCountry?.length);
+  const isSearching = searchParams.has("q")
 
   const countriesBySearch =
     isSearching && searchedCountries?.length > 0 ? searchedCountries : countries;
@@ -46,12 +46,14 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!searchedCountry || isSearching <= 0) return;
+    if (!searchedCountry || !isSearching) return;
 
     const abortController = new AbortController();
-    getCountryByName(searchedCountry, abortController.signal).then(setSearchedCountries).catch((error) => {
-      console.log(error.message)
-    });
+    getCountryByName(searchedCountry, abortController.signal)
+      .then(setSearchedCountries)
+      .catch((error) => {
+        console.log(error.message)
+      });
 
     return () => { abortController.abort() }
   }, [searchedCountry]);
@@ -62,7 +64,8 @@ const Home = () => {
         <CountrySearch searchedCountry={searchedCountry} />
         <RegionSelect selectedRegion={selectedRegion} />
       </div>
-      <ul className="grid sm:grid-cols-2 gap-4 lg:grid-cols-3">
+      {isSearching && searchedCountries?.length <= 0 ? <p>No country found with query: {searchedCountry}</p> : null}
+      {isSearching && searchedCountries?.length <= 0 ? null : <ul className="grid sm:grid-cols-2 gap-4 lg:grid-cols-3">
         {!filteredCountries ? (
           Array.from({ length: 10 }).map(_ => {
             return <CountryCardSkeleton key={Math.random()} />
@@ -99,7 +102,7 @@ const Home = () => {
             );
           })
         )}
-      </ul>
+      </ul>}
     </div>
   );
 }
