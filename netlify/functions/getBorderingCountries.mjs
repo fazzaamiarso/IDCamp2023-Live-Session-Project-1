@@ -5,16 +5,15 @@ export default async (req) => {
     const countryCodes = params[0].split(",")
 
     try {
-        const promises = await Promise.all(
-            countryCodes.map(async (code) => {
-                return await countryClient.get(`alpha/${code.toLowerCase()}`, {
-                    params: {
-                        fields: ["name", "cca3"],
-                    },
-                    paramsSerializer: { indexes: null },
-                });
-            })
-        );
+        const promiseArray = countryCodes.map((code) => {
+            return countryClient.get(`alpha/${code.toLowerCase()}`, {
+                params: {
+                    fields: ["name", "cca3"],
+                },
+                paramsSerializer: { indexes: null },
+            });
+        })
+        const promises = await Promise.all(promiseArray);
 
         console.log("PARAMS:", JSON.stringify(params))
         console.log("PROMISES:", promises)
